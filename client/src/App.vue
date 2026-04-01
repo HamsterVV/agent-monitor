@@ -15,16 +15,14 @@ import ChatRoom from './components/ChatRoom.vue';
   box-sizing: border-box;
 }
 
-body {
+body, html {
+  height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background: #f5f5f5;
 }
 
 .app {
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+  width: 100%;
 }
 </style>

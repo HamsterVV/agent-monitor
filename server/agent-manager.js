@@ -18,28 +18,24 @@ export async function getAvailableAgents() {
       cwd: '/home/openclaw/.openclaw/workspace'
     });
     
-    // 解析输出
+    console.log('Agent list output:', stdout);
+    
+    // 解析输出 - 格式：- id (name)
     const agents = [];
     const lines = stdout.split('\n');
-    let currentAgent = null;
     
     for (const line of lines) {
-      const match = line.match(/^- (\w+)(?: \(([^)]+)\))?/);
+      // 匹配：- main (default)  或  - coding (老爹)
+      const match = line.match(/^- (\S+)\s+\(([^)]+)\)/);
       if (match) {
-        if (currentAgent) {
-          agents.push(currentAgent);
-        }
-        currentAgent = {
+        agents.push({
           id: match[1],
-          name: match[2] || match[1]
-        };
+          name: match[2]
+        });
       }
     }
     
-    if (currentAgent) {
-      agents.push(currentAgent);
-    }
-    
+    console.log('Parsed agents:', agents);
     return agents;
   } catch (error) {
     console.error('获取 agent 列表失败:', error);

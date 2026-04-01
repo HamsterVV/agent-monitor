@@ -51,23 +51,16 @@ app.post('/api/agents/list', async (req, res) => {
     
     const agents = [];
     const lines = stdout.split('\n');
-    let currentAgent = null;
     
     for (const line of lines) {
-      const match = line.match(/^- (\w+)(?: \(([^)]+)\))?/);
+      // 匹配：- main (default)  或  - coding (老爹)
+      const match = line.match(/^- (\S+)\s+\(([^)]+)\)/);
       if (match) {
-        if (currentAgent) {
-          agents.push(currentAgent);
-        }
-        currentAgent = {
+        agents.push({
           id: match[1],
-          name: match[2] || match[1]
-        };
+          name: match[2]
+        });
       }
-    }
-    
-    if (currentAgent) {
-      agents.push(currentAgent);
     }
     
     res.json({ success: true, agents });
