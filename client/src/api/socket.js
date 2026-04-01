@@ -12,20 +12,22 @@ export function initSocket(handlers) {
   });
   
   socket.on('connect', () => {
-    console.log('Socket 已连接');
+    console.log('[Socket] 已连接到:', SOCKET_URL);
     handlers.onConnect?.();
   });
   
   socket.on('disconnect', () => {
-    console.log('Socket 已断开');
+    console.log('[Socket] 已断开连接');
     handlers.onDisconnect?.();
   });
   
   socket.on('new_message', (message) => {
+    console.log('[Socket] 收到 new_message:', message);
     handlers.onNewMessage?.(message);
   });
   
   socket.on('agent_response', (data) => {
+    console.log('[Socket] 收到 agent_response:', data);
     handlers.onAgentResponse?.(data);
   });
   

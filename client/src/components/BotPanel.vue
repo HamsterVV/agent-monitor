@@ -115,10 +115,14 @@ watch(dialogVisible, (val) => {
 
 onMounted(async () => {
   try {
+    console.log('[BotPanel] 开始加载 Agent 列表...');
     const agentList = await getAgentList();
-    agents.value = agentList;
+    console.log('[BotPanel] 收到 Agent 列表:', agentList);
+    agents.value = agentList || [];
+    console.log('[BotPanel] agents.value 已设置:', agents.value);
   } catch (error) {
-    console.error('加载 Agent 列表失败:', error);
+    console.error('[BotPanel] 加载 Agent 列表失败:', error);
+    agents.value = [];
   }
 });
 

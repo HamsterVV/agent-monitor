@@ -36,11 +36,13 @@ export function setupSocketHandlers(io, db) {
     // 发送消息
     socket.on('send_message', async (data, callback) => {
       try {
+        console.log('[Socket] send_message 收到数据:', data);
         const { content, image_url, mentions } = data;
         
         // 服务端二次解析 @
         const botList = await getAllBots();
         const validatedMentions = parseMentionsServer(content, botList);
+        console.log('[Socket] 解析 mentions:', validatedMentions);
         
         // 保存消息
         const messageId = await saveMessage({
@@ -51,11 +53,14 @@ export function setupSocketHandlers(io, db) {
           image_url: image_url || null,
           mentions: validatedMentions
         });
+        console.log('[Socket] 消息已保存，ID:', messageId);
         
         // 获取完整消息对象
         const message = await getMessageById(messageId);
+        console.log('[Socket] 获取到的消息对象:', message);
         
         // 广播给所有客户端
+        console.log('[Socket] 广播 new_message 事件');
         io.emit('new_message', message);
         
         // 触发被@的 bot
@@ -87,7 +92,9 @@ export function setupSocketHandlers(io, db) {
         }
         
         callback({ success: true, message_id: messageId });
+        console.log('[Socket] send_message 完成');
       } catch (error) {
+        console.error('[Socket] send_message 错误:', error);
         callback({ success: false, error: error.message });
       }
     });
@@ -105,9 +112,12 @@ export function setupSocketHandlers(io, db) {
     // 获取可用 agent 列表
     socket.on('get_agent_list', async (callback) => {
       try {
+        console.log('[Socket] get_agent_list 请求收到');
         const agents = await getAvailableAgents();
+        console.log('[Socket] get_agent_list 返回:', agents);
         callback({ success: true, agents });
       } catch (error) {
+        console.error('[Socket] get_agent_list 错误:', error);
         callback({ success: false, error: error.message });
       }
     });

@@ -18,28 +18,31 @@ export async function getAvailableAgents() {
       cwd: '/home/openclaw/.openclaw/workspace'
     });
     
-    console.log('Agent list output:', stdout);
+    console.log('[Agent Manager] Raw output:', stdout);
     
-    // 解析输出 - 格式：- id (name)
+    // 解析输出 - 格式：- id (name) 或 - id
     const agents = [];
     const lines = stdout.split('\n');
     
     for (const line of lines) {
-      // 匹配：- main (default)  或  - coding (老爹)
-      const match = line.match(/^- (\S+)\s+\(([^)]+)\)/);
+      // 只处理以 "- " 开头的行，跳过 "Agents:" 和缩进行
+      if (!line.trim().startsWith('- ')) continue;
+      
+      // 匹配：- main (default) 或 - coding (老爹) 或 - chen
+      const match = line.match(/^- (\S+)(?:\s+\(([^)]+)\))?/);
       if (match) {
-        agents.push({
-          id: match[1],
-          name: match[2]
-        });
+        const id = match[1];
+        const name = match[2] || id; // 如果没有括号名称，使用 id 作为名称
+        agents.push({ id, name });
+        console.log(`[Agent Manager] Parsed agent: ${id} -> ${name}`);
       }
     }
     
-    console.log('Parsed agents:', agents);
+    console.log('[Agent Manager] Total agents found:', agents.length);
     return agents;
   } catch (error) {
-    console.error('获取 agent 列表失败:', error);
-    throw new Error('无法获取可用 agent 列表');
+    console.error('[Agent Manager] 获取 agent 列表失败:', error);
+    throw new Error('无法获取可用 agent 列表：' + error.message);
   }
 }
 

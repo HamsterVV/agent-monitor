@@ -7,14 +7,18 @@ export const useChatStore = defineStore('chat', () => {
   const agentStatus = ref({}); // { botId: 'thinking' | 'responded' | 'error' }
   
   function addMessage(message) {
+    console.log('[ChatStore] addMessage:', message);
     messages.value.push(message);
+    console.log('[ChatStore] messages 现在长度:', messages.value.length);
   }
   
   function setMessages(newMessages) {
+    console.log('[ChatStore] setMessages:', newMessages.length, '条');
     messages.value = newMessages;
   }
   
   function prependMessages(newMessages) {
+    console.log('[ChatStore] prependMessages:', newMessages.length, '条');
     messages.value = [...newMessages, ...messages.value];
   }
   
