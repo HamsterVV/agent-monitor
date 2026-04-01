@@ -31,6 +31,11 @@ app.use(express.json());
 
 // 静态文件服务
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/assets', express.static(path.join(__dirname, '../client/dist/assets'), {
+  maxAge: '1d',
+  etag: true,
+  lastModified: true
+}));
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // API 路由
